@@ -16,10 +16,11 @@ jobs:
         issue-number: ${{ github.event.issue.number }}
     - name: Assign issue to self
       if: contains(github.event.issue.title, 'Propuesta de Charla') || contains(github.event.issue.body, '## Propuesta de Charla')
-      uses: actions/assign-one-author-to-issues@v2
+      uses: actions-ecosystem/action-add-assignees@v1
       with:
-        issue-number: ${{ github.event.issue.number }}
-        assignee: TineoC
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        issue_number: ${{ github.event.issue.number }}
+        assignees: TineoC
     - name: Add welcome comment
       if: contains(github.event.issue.title, 'Propuesta de Charla') || contains(github.event.issue.body, '## Propuesta de Charla')
       uses: peter-evans/create-or-update-comment@v2
