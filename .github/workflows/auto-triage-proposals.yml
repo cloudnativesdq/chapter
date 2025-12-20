@@ -61,12 +61,16 @@ jobs:
             gh issue edit "$ISSUE_URL" --add-label "$LABELS" || echo "Warning: Failed to add labels"
           fi
 
-          gh issue edit "$ISSUE_URL" --milestone "$MILESTONE_TITLE" || echo "Warning: Failed to assign milestone"
+          # Verify if milestone exists before assigning
+          MILESTONE_NUMBER=$(gh api repos/:owner/:repo/milestones --jq ".[] | select(.title == \"$MILESTONE_TITLE\") | .number")
+          if [ -n "$MILESTONE_NUMBER" ]; then
+            gh issue edit "$ISSUE_URL" --milestone "$MILESTONE_TITLE" || echo "Warning: Failed to assign milestone"
+          else
+            echo "Warning: Milestone '$MILESTONE_TITLE' not found in repository."
+          fi
 
-          # Try to assign both; if that fails (e.g. user not a collaborator), try just TineoC
-          gh issue edit "$ISSUE_URL" --add-assignee "TineoC,maddigsys" || \
-          gh issue edit "$ISSUE_URL" --add-assignee "TineoC" || \
-          echo "Warning: Failed to assign anyone"
+          # Assign only TineoC as requested in the latest adjustment
+          gh issue edit "$ISSUE_URL" --add-assignee "TineoC" || echo "Warning: Failed to assign TineoC"
 
           # 4. Add a welcoming comment
           gh issue comment "$ISSUE_URL" --body "¡Gracias por tu propuesta de charla! 🚀 
