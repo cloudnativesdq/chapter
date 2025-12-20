@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     if: contains(github.event.issue.title, '[PROPUESTA]') || contains(github.event.issue.body, 'Tipo de Intervención')
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Auto-assign, Label, and Milestone
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
