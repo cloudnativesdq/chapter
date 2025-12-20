@@ -1,81 +1,111 @@
-name: Auto-Triage New Talk Proposals
+name: Cloud Native SDQ - Talk Proposal Manager
 
 on:
   issues:
     types: [opened, edited]
+  issue_comment:
+    types: [created]
   workflow_dispatch:
+    inputs:
+      bulk:
+        description: "Run triage on all open proposals"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   issues: write
+  contents: read
 
 jobs:
-  triage:
+  manage-proposal:
     runs-on: ubuntu-latest
-    if: contains(github.event.issue.title, '[PROPUESTA]') || contains(github.event.issue.body, 'Tipo de Intervención')
+    # Run if it's an issue event on a proposal, or a slash command in a comment, or manual trigger
+    if: |
+      (github.event_name == 'issues' && (contains(github.event.issue.title, '[PROPUESTA]') || contains(github.event.issue.body, 'Tipo de Intervención'))) ||
+      (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/')) ||
+      (github.event_name == 'workflow_dispatch')
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Auto-assign, Label, and Milestone
+      - name: Process Proposal
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ISSUE_URL: ${{ github.event.issue.html_url }}
-          ISSUE_BODY: ${{ github.event.issue.body }}
+          EVENT_NAME: ${{ github.event_name }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          COMMENT_BODY: ${{ github.event.comment.body }}
+          IS_BULK: ${{ github.event.inputs.bulk }}
         run: |
-          # 1. Determine labels based on issue content
-          LABELS=""
+          # Function to triage a single issue
+          triage_issue() {
+            local issue_no=$1
+            local command_type=$2 # "all", "labels", "milestones"
+            
+            echo "Processing Issue #$issue_no (Command: $command_type)..."
+            
+            # Fetch issue data
+            local issue_data=$(gh issue view "$issue_no" --json url,body)
+            local issue_url=$(echo "$issue_data" | jq -r '.url')
+            local issue_body=$(echo "$issue_data" | jq -r '.body')
 
-          # Detect Format/Category
-          if echo "$ISSUE_BODY" | grep -qi "Workshop"; then
-            LABELS="${LABELS}${LABELS:+,}type/workshop"
-          fi
-          if echo "$ISSUE_BODY" | grep -qi "Session"; then
-            LABELS="${LABELS}${LABELS:+,}session"
-          fi
+            # 1. Labels Logic
+            if [[ "$command_type" == "all" || "$command_type" == "labels" ]]; then
+              LABELS=""
+              if echo "$issue_body" | grep -qi "Workshop"; then LABELS="${LABELS}${LABELS:+,}type/workshop"; fi
+              if echo "$issue_body" | grep -qi "Session"; then LABELS="${LABELS}${LABELS:+,}session"; fi
+              if echo "$issue_body" | grep -qi "Virtual"; then LABELS="${LABELS}${LABELS:+,}type/online"; fi
+              if echo "$issue_body" | grep -qi "Onsite"; then LABELS="${LABELS}${LABELS:+,}type/in-person"; fi
+              
+              if [ -n "$LABELS" ]; then
+                gh issue edit "$issue_no" --add-label "$LABELS" || echo "Warning: Failed labels on #$issue_no"
+              fi
+            fi
 
-          # Detect Modality
-          if echo "$ISSUE_BODY" | grep -qi "Virtual"; then
-            LABELS="${LABELS}${LABELS:+,}type/online"
-          fi
-          if echo "$ISSUE_BODY" | grep -qi "Onsite"; then
-            LABELS="${LABELS}${LABELS:+,}type/in-person"
-          fi
+            # 2. Milestone Logic
+            if [[ "$command_type" == "all" || "$command_type" == "milestones" ]]; then
+              SELECTED_PERIOD=$(echo "$issue_body" | grep -A 2 "Periodo Sugerido (Trimestre)" | tail -n 1 | xargs)
+              case "$SELECTED_PERIOD" in
+                *"Q1"*) MILESTONE_TITLE="2026 Q1" ;;
+                *"Q2"*) MILESTONE_TITLE="2026 Q2" ;;
+                *"Q3"*) MILESTONE_TITLE="2026 Q3" ;;
+                *"Q4"*) MILESTONE_TITLE="2026 Q4" ;;
+                *) MILESTONE_TITLE="2026 Q1" ;;
+              esac
+              
+              # Verify milestone
+              MILESTONE_NUMBER=$(gh api repos/:owner/:repo/milestones --jq ".[] | select(.title == \"$MILESTONE_TITLE\") | .number")
+              if [ -n "$MILESTONE_NUMBER" ]; then
+                gh issue edit "$issue_no" --milestone "$MILESTONE_TITLE" || echo "Warning: Failed milestone on #$issue_no"
+              else
+                echo "Warning: Milestone '$MILESTONE_TITLE' not found."
+              fi
+            fi
 
-          # 2. Extract and Map Milestone
-          # Get the selected value from the dropdown
-          SELECTED_PERIOD=$(echo "$ISSUE_BODY" | grep -A 2 "Periodo Sugerido (Trimestre)" | tail -n 1 | xargs)
+            # 3. Assignees (Always ensure TineoC is assigned for all/triage)
+            if [[ "$command_type" == "all" ]]; then
+              gh issue edit "$issue_no" --add-assignee "TineoC" || echo "Warning: Failed assignment"
+            fi
+          }
 
-          case "$SELECTED_PERIOD" in
-            *"Q1"*) MILESTONE_TITLE="2026 Q1" ;;
-            *"Q2"*) MILESTONE_TITLE="2026 Q2" ;;
-            *"Q3"*) MILESTONE_TITLE="2026 Q3" ;;
-            *"Q4"*) MILESTONE_TITLE="2026 Q4" ;;
-            *) MILESTONE_TITLE="2026 Q1" ;; # Fallback
-          esac
+          # --- Main Execution ---
 
-          # 3. Apply changes via GitHub CLI
-          # Split into multiple commands to ensure one failure doesn't block the others
-          if [ -n "$LABELS" ]; then
-            gh issue edit "$ISSUE_URL" --add-label "$LABELS" || echo "Warning: Failed to add labels"
-          fi
-
-          # Verify if milestone exists before assigning
-          MILESTONE_NUMBER=$(gh api repos/:owner/:repo/milestones --jq ".[] | select(.title == \"$MILESTONE_TITLE\") | .number")
-          if [ -n "$MILESTONE_NUMBER" ]; then
-            gh issue edit "$ISSUE_URL" --milestone "$MILESTONE_TITLE" || echo "Warning: Failed to assign milestone"
+          if [[ "$IS_BULK" == "true" ]]; then
+            echo "Running BULK triage..."
+            ISSUES=$(gh issue list --state open --search "[PROPUESTA]" --json number --jq '.[].number')
+            for num in $ISSUES; do
+              triage_issue "$num" "all"
+            done
+          elif [[ "$EVENT_NAME" == "issue_comment" ]]; then
+            if [[ "$COMMENT_BODY" == "/labels" ]]; then
+              triage_issue "$ISSUE_NUMBER" "labels"
+            elif [[ "$COMMENT_BODY" == "/milestones" ]]; then
+              triage_issue "$ISSUE_NUMBER" "milestones"
+            elif [[ "$COMMENT_BODY" == "/triage" ]]; then
+              triage_issue "$ISSUE_NUMBER" "all"
+            fi
           else
-            echo "Warning: Milestone '$MILESTONE_TITLE' not found in repository."
+            # Triggered by issue opened/edited or manual (non-bulk)
+            triage_issue "$ISSUE_NUMBER" "all"
           fi
-
-          # Assign only TineoC as requested in the latest adjustment
-          gh issue edit "$ISSUE_URL" --add-assignee "TineoC" || echo "Warning: Failed to assign TineoC"
-
-          # 4. Add a welcoming comment
-          gh issue comment "$ISSUE_URL" --body "¡Gracias por tu propuesta de charla! 🚀 
-
-          Hemos realizado las siguientes acciones automáticas:
-          - **Etiquetado:** Se han añadido etiquetas de categoría y modalidad.
-          - **Milestone:** Asignado a **$MILESTONE_TITLE** (basado en la fecha de recepción).
-          - **Asignación:** Los organizadores (@TineoC, @maddigsys) revisarán tu propuesta pronto.
-
-          ¡Estamos ansiosos por saber más sobre tu charla!"
