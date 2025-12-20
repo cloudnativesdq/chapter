@@ -109,6 +109,18 @@ body:
         - "Onsite (Presencial - Santo Domingo)"
     validations:
       required: true
+  - type: dropdown
+    id: preferred_quarter
+    attributes:
+      label: Periodo Sugerido (Trimestre)
+      description: "¿En qué trimestre del año te gustaría presentar?"
+      options:
+        - "2026 Ene-Mar (Q1)"
+        - "2026 Abr-Jun (Q2)"
+        - "2026 Jul-Sep (Q3)"
+        - "2026 Oct-Dic (Q4)"
+    validations:
+      required: true
 
   - type: input
     id: proposed_date_time

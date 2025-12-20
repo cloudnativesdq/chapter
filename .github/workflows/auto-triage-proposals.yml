@@ -38,22 +38,17 @@ jobs:
             LABELS="${LABELS}${LABELS:+,}type/in-person"
           fi
 
-          # 2. Calculate Milestone (Quarterly)
-          # Based on current date Dec 2025, we triage for 2026
-          MONTH=$(date +%-m)
-          YEAR=$(date +%Y)
+          # 2. Extract and Map Milestone
+          # Get the selected value from the dropdown
+          SELECTED_PERIOD=$(echo "$ISSUE_BODY" | grep -A 2 "Periodo Sugerido (Trimestre)" | tail -n 1 | xargs)
 
-          # Logic: If month >= 11, triage for next year Q1.
-          # Otherwise triage for current year's quarters.
-          if [ "$MONTH" -ge 11 ]; then
-            YEAR=$((YEAR + 1))
-            Q="Q1"
-          elif [ "$MONTH" -le 2 ]; then Q="Q1"
-          elif [ "$MONTH" -le 5 ]; then Q="Q2"
-          elif [ "$MONTH" -le 8 ]; then Q="Q3"
-          else Q="Q4"; fi
-
-          MILESTONE_TITLE="$YEAR $Q"
+          case "$SELECTED_PERIOD" in
+            *"Q1"*) MILESTONE_TITLE="2026 Q1" ;;
+            *"Q2"*) MILESTONE_TITLE="2026 Q2" ;;
+            *"Q3"*) MILESTONE_TITLE="2026 Q3" ;;
+            *"Q4"*) MILESTONE_TITLE="2026 Q4" ;;
+            *) MILESTONE_TITLE="2026 Q1" ;; # Fallback
+          esac
 
           # 3. Apply changes via GitHub CLI
           # Split into multiple commands to ensure one failure doesn't block the others
