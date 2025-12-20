@@ -2,7 +2,8 @@ name: Auto-Triage New Talk Proposals
 
 on:
   issues:
-    types: [opened]
+    types: [opened, edited]
+  workflow_dispatch:
 
 permissions:
   issues: write
@@ -55,11 +56,17 @@ jobs:
           MILESTONE_TITLE="$YEAR $Q"
 
           # 3. Apply changes via GitHub CLI
-          # We use --add-label which takes a comma-separated list
-          gh issue edit "$ISSUE_URL" \
-            --add-label "$LABELS" \
-            --add-assignee "TineoC,maddigsys" \
-            --milestone "$MILESTONE_TITLE"
+          # Split into multiple commands to ensure one failure doesn't block the others
+          if [ -n "$LABELS" ]; then
+            gh issue edit "$ISSUE_URL" --add-label "$LABELS" || echo "Warning: Failed to add labels"
+          fi
+
+          gh issue edit "$ISSUE_URL" --milestone "$MILESTONE_TITLE" || echo "Warning: Failed to assign milestone"
+
+          # Try to assign both; if that fails (e.g. user not a collaborator), try just TineoC
+          gh issue edit "$ISSUE_URL" --add-assignee "TineoC,maddigsys" || \
+          gh issue edit "$ISSUE_URL" --add-assignee "TineoC" || \
+          echo "Warning: Failed to assign anyone"
 
           # 4. Add a welcoming comment
           gh issue comment "$ISSUE_URL" --body "¡Gracias por tu propuesta de charla! 🚀 
