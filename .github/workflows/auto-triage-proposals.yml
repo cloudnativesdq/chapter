@@ -4,29 +4,69 @@ on:
   issues:
     types: [opened]
 
+permissions:
+  issues: write
+
 jobs:
   triage:
     runs-on: ubuntu-latest
+    if: contains(github.event.issue.title, '[PROPUESTA]') || contains(github.event.issue.body, 'Tipo de Intervención')
     steps:
-    - name: Auto-assign and label talk proposals
-      if: contains(github.event.issue.title, 'Propuesta de Charla') || contains(github.event.issue.body, '## Propuesta de Charla')
-      uses: actions-ecosystem/action-add-labels@v1
-      with:
-        labels: status/looking-for-speaker
-        issue-number: ${{ github.event.issue.number }}
-    - name: Assign issue to self
-      if: contains(github.event.issue.title, 'Propuesta de Charla') || contains(github.event.issue.body, '## Propuesta de Charla')
-      uses: actions-ecosystem/action-add-assignees@v1
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        issue_number: ${{ github.event.issue.number }}
-        assignees: |
-          TineoC
-          maddigsys
-    - name: Add welcome comment
-      if: contains(github.event.issue.title, 'Propuesta de Charla') || contains(github.event.issue.body, '## Propuesta de Charla')
-      uses: peter-evans/create-or-update-comment@v2
-      with:
-        issue-number: ${{ github.event.issue.number }}
-        body: |
-          ¡Gracias por tu propuesta de charla! Hemos asignado este tema a los organizadores para su revisión. Te notificaremos pronto sobre los próximos pasos.
+      - name: Auto-assign, Label, and Milestone
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          # 1. Determine labels based on issue content
+          LABELS=""
+
+          # Detect Format/Category
+          if echo "$ISSUE_BODY" | grep -qi "Workshop"; then
+            LABELS="${LABELS}${LABELS:+,}type/workshop"
+          fi
+          if echo "$ISSUE_BODY" | grep -qi "Session"; then
+            LABELS="${LABELS}${LABELS:+,}session"
+          fi
+
+          # Detect Modality
+          if echo "$ISSUE_BODY" | grep -qi "Virtual"; then
+            LABELS="${LABELS}${LABELS:+,}type/online"
+          fi
+          if echo "$ISSUE_BODY" | grep -qi "Onsite"; then
+            LABELS="${LABELS}${LABELS:+,}type/in-person"
+          fi
+
+          # 2. Calculate Milestone (Quarterly)
+          # Based on current date Dec 2025, we triage for 2026
+          MONTH=$(date +%-m)
+          YEAR=$(date +%Y)
+
+          # Logic: If month >= 11, triage for next year Q1.
+          # Otherwise triage for current year's quarters.
+          if [ "$MONTH" -ge 11 ]; then
+            YEAR=$((YEAR + 1))
+            Q="Q1"
+          elif [ "$MONTH" -le 2 ]; then Q="Q1"
+          elif [ "$MONTH" -le 5 ]; then Q="Q2"
+          elif [ "$MONTH" -le 8 ]; then Q="Q3"
+          else Q="Q4"; fi
+
+          MILESTONE_TITLE="$YEAR $Q"
+
+          # 3. Apply changes via GitHub CLI
+          # We use --add-label which takes a comma-separated list
+          gh issue edit "$ISSUE_URL" \
+            --add-label "$LABELS" \
+            --add-assignee "TineoC,maddigsys" \
+            --milestone "$MILESTONE_TITLE"
+
+          # 4. Add a welcoming comment
+          gh issue comment "$ISSUE_URL" --body "¡Gracias por tu propuesta de charla! 🚀 
+
+          Hemos realizado las siguientes acciones automáticas:
+          - **Etiquetado:** Se han añadido etiquetas de categoría y modalidad.
+          - **Milestone:** Asignado a **$MILESTONE_TITLE** (basado en la fecha de recepción).
+          - **Asignación:** Los organizadores (@TineoC, @maddigsys) revisarán tu propuesta pronto.
+
+          ¡Estamos ansiosos por saber más sobre tu charla!"

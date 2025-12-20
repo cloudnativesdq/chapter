@@ -1,0 +1,133 @@
+name: "☁️ Propuesta de Charla"
+description: Usa esta plantilla para proponer una charla para Cloud Native Santo Domingo.
+title: "[PROPUESTA]: <Título de la Charla>"
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ¡Gracias por tu interés en presentar en Cloud Native Santo Domingo! Por favor, completa la siguiente información para que el equipo organizador pueda revisar tu propuesta.
+
+  - type: input
+    id: speaker_name
+    attributes:
+      label: Nombre Completo
+      placeholder: "Ej. Juan Pérez"
+    validations:
+      required: true
+
+  - type: input
+    id: speaker_title
+    attributes:
+      label: Puesto Actual (Job Title)
+      placeholder: "Ej. Senior Cloud Architect"
+    validations:
+      required: true
+
+  - type: input
+    id: speaker_company
+    attributes:
+      label: Empresa / Empleador
+      placeholder: "Ej. Google / Freelance"
+    validations:
+      required: true
+
+  - type: textarea
+    id: speaker_bio
+    attributes:
+      label: Bio Corta
+      placeholder: "Una breve descripción de tu trayectoria y experiencia."
+    validations:
+      required: true
+
+  - type: input
+    id: speaker_email
+    attributes:
+      label: Email de Contacto
+      placeholder: "Ej. juan.perez@example.com"
+    validations:
+      required: true
+
+  - type: input
+    id: speaker_photo
+    attributes:
+      label: Foto de Perfil (URL)
+      placeholder: "Link a LinkedIn, GitHub o Gravatar."
+
+  - type: input
+    id: speaker_socials
+    attributes:
+      label: Redes Sociales
+      placeholder: "LinkedIn: /in/juanperez, Twitter: @juanperez"
+
+  - type: markdown
+    attributes:
+      value: "---"
+
+  - type: input
+    id: talk_title
+    attributes:
+      label: Título de la Charla
+      placeholder: "Ej. Dominando Kubernetes con GitOps"
+    validations:
+      required: true
+
+  - type: textarea
+    id: talk_short_description
+    attributes:
+      label: Descripción Corta (Short Description)
+      placeholder: "Máximo 200 caracteres para redes sociales y previews."
+    validations:
+      required: true
+
+  - type: textarea
+    id: talk_description
+    attributes:
+      label: Descripción Larga (Long Description)
+      placeholder: "Detalles completos de la charla, qué aprenderá la audiencia y tecnologías a usar."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Tipo de Intervención
+      description: "Selecciona si es una sesión regular o un taller práctico."
+      options:
+        - "Session (Charla Técnica)"
+        - "Workshop (Taller Práctico)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: modality
+    attributes:
+      label: Modalidad del Evento
+      description: "¿Cómo prefieres impartir esta charla?"
+      options:
+        - "Virtual (Online)"
+        - "Onsite (Presencial - Santo Domingo)"
+    validations:
+      required: true
+
+  - type: input
+    id: proposed_date_time
+    attributes:
+      label: Fecha y Hora Sugerida
+      placeholder: "Ej. 15 de Marzo, 6:30 PM AST"
+      description: "Por favor, indica tu disponibilidad aproximada o una fecha específica que tengas en mente."
+    validations:
+      required: true
+
+  - type: input
+    id: venue_suggestion
+    attributes:
+      label: Ubicación Sugerida (Solo Presencial)
+      placeholder: "Ej. Oficinas de TechCompany o Co-working Space"
+      description: "Si seleccionaste modalidad 'Onsite', ¿tienes algún lugar sugerido o patrocinado para el evento?"
+
+  - type: input
+    id: tags
+    attributes:
+      label: Temas Clave (Tags)
+      placeholder: "Ej. Kubernetes, Serverless, Go, Security"
