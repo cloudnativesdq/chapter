@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Proponer una charla
+    url: https://github.com/cloudnativesdq/chapter/issues/new?assignees=TineoC&labels=status%2Flooking-for-speaker&template=%E2%98%81%EF%B8%8F--propuesta-de-charla.md
+    about: Proponer una charla para uno de nuestros meetups.

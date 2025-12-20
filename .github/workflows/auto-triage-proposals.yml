@@ -1,0 +1,29 @@
+name: Auto-Triage New Talk Proposals
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  triage:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Auto-assign and label talk proposals
+      if: contains(github.event.issue.title, 'Propuesta de Charla') || contains(github.event.issue.body, '## Propuesta de Charla')
+      uses: actions-ecosystem/action-add-labels@v1
+      with:
+        labels: status/looking-for-speaker
+        issue-number: ${{ github.event.issue.number }}
+    - name: Assign issue to self
+      if: contains(github.event.issue.title, 'Propuesta de Charla') || contains(github.event.issue.body, '## Propuesta de Charla')
+      uses: actions/assign-one-author-to-issues@v2
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        assignee: TineoC
+    - name: Add welcome comment
+      if: contains(github.event.issue.title, 'Propuesta de Charla') || contains(github.event.issue.body, '## Propuesta de Charla')
+      uses: peter-evans/create-or-update-comment@v2
+      with:
+        issue-number: ${{ github.event.issue.number }}
+        body: |
+          ¡Gracias por tu propuesta de charla! Hemos asignado este tema a los organizadores para su revisión. Te notificaremos pronto sobre los próximos pasos.
