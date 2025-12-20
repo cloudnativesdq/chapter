@@ -20,12 +20,11 @@ permissions:
 jobs:
   manage-proposal:
     runs-on: ubuntu-latest
-    # Run if it's an issue event on a proposal, or a slash command in a comment, or manual trigger
     if: |
       (github.event_name == 'issues' && (contains(github.event.issue.title, '[PROPUESTA]') || contains(github.event.issue.body, 'Tipo de Intervención'))) ||
       (github.event_name == 'issue_comment' && startsWith(github.event.comment.body, '/')) ||
       (github.event_name == 'workflow_dispatch')
-
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -37,22 +36,20 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           COMMENT_BODY: ${{ github.event.comment.body }}
           IS_BULK: ${{ github.event.inputs.bulk }}
+          REPO: ${{ github.repository }}
+          ACTOR: ${{ github.actor }}
         run: |
-          # Function to triage a single issue
           triage_issue() {
             local issue_no=$1
-            local command_type=$2 # "all", "labels", "milestones", "assign"
-            local args=$3         # specific for assign
+            local command_type=$2
+            local args=$3
             local summary=""
             
             echo "Processing Issue #$issue_no (Command: $command_type)..."
             
-            # Fetch issue data
             local issue_data=$(gh issue view "$issue_no" --json url,body)
-            local issue_url=$(echo "$issue_data" | jq -r '.url')
             local issue_body=$(echo "$issue_data" | jq -r '.body')
 
-            # 1. Labels Logic
             if [[ "$command_type" == "all" || "$command_type" == "labels" ]]; then
               LABELS=""
               if echo "$issue_body" | grep -qi "Workshop"; then LABELS="${LABELS}${LABELS:+,}type/workshop"; fi
@@ -61,11 +58,14 @@ jobs:
               if echo "$issue_body" | grep -qi "Onsite"; then LABELS="${LABELS}${LABELS:+,}type/in-person"; fi
               
               if [ -n "$LABELS" ]; then
-                gh issue edit "$issue_no" --add-label "$LABELS" && summary="${summary}\n- ✅ Etiquetas actualizadas: $LABELS" || summary="${summary}\n- ❌ Error al actualizar etiquetas"
+                gh issue edit "$issue_no" --add-label "$LABELS" && \
+                summary="$summary
+- ✅ Etiquetas actualizadas: $LABELS" || \
+                summary="$summary
+- ❌ Error al actualizar etiquetas"
               fi
             fi
 
-            # 2. Milestone Logic
             if [[ "$command_type" == "all" || "$command_type" == "milestones" ]]; then
               SELECTED_PERIOD=$(echo "$issue_body" | grep -A 2 "Periodo Sugerido (Trimestre)" | tail -n 1 | xargs)
               case "$SELECTED_PERIOD" in
@@ -76,38 +76,45 @@ jobs:
                 *) MILESTONE_TITLE="2026 Q1" ;;
               esac
               
-              MILESTONE_NUMBER=$(gh api repos/:owner/:repo/milestones --jq ".[] | select(.title == \"$MILESTONE_TITLE\") | .number")
+              MILESTONE_NUMBER=$(gh api repos/${REPO}/milestones --jq ".[] | select(.title == \"$MILESTONE_TITLE\") | .number")
               if [ -n "$MILESTONE_NUMBER" ]; then
-                gh issue edit "$issue_no" --milestone "$MILESTONE_TITLE" && summary="${summary}\n- ✅ Milestone asignado: $MILESTONE_TITLE" || summary="${summary}\n- ❌ Error al asignar milestone"
+                gh issue edit "$issue_no" --milestone "$MILESTONE_TITLE" && \
+                summary="$summary
+- ✅ Milestone asignado: $MILESTONE_TITLE" || \
+                summary="$summary
+- ❌ Error al asignar milestone"
               else
-                summary="${summary}\n- ⚠️ No se encontró el milestone '$MILESTONE_TITLE'"
+                summary="$summary
+- ⚠️ No se encontró el milestone '$MILESTONE_TITLE'"
               fi
             fi
 
-            # 3. Assignees Logic
             if [[ "$command_type" == "all" ]]; then
-              gh issue edit "$issue_no" --add-assignee "TineoC" && summary="${summary}\n- ✅ Responsable asignado: @TineoC"
+              gh issue edit "$issue_no" --add-assignee "TineoC" && \
+              summary="$summary
+- ✅ Responsable asignado: @TineoC"
             elif [[ "$command_type" == "assign" ]]; then
               if [ -n "$args" ]; then
-                # Remove extra spaces and @ if present
                 CLEAN_ARGS=$(echo "$args" | tr -d '@' | xargs)
-                gh issue edit "$issue_no" --add-assignee "$CLEAN_ARGS" && summary="${summary}\n- ✅ Nueva asignación: $args" || summary="${summary}\n- ❌ Error al asignar a: $args (Verifica que sea colaborador)"
+                gh issue edit "$issue_no" --add-assignee "$CLEAN_ARGS" && \
+                summary="$summary
+- ✅ Nueva asignación: $args" || \
+                summary="$summary
+- ❌ Error al asignar a: $args (Verifica que sea colaborador)"
               else
-                summary="${summary}\n- ⚠️ Uso: /assign <username>"
+                summary="$summary
+- ⚠️ Uso: /assign <username>"
               fi
             fi
 
-            # Post feedback if it's not a bulk run
             if [ "$IS_BULK" != "true" ] && [ -n "$summary" ]; then
               gh issue comment "$issue_no" --body "### 🤖 Actualización Automática
-              Hola @${{ github.actor }}, he procesado tu comando: $summary"
+Hola @${ACTOR}, he procesado tu comando:
+$summary"
             fi
           }
 
-          # --- Main Execution ---
-
           if [[ "$IS_BULK" == "true" ]]; then
-            echo "Running BULK triage..."
             ISSUES=$(gh issue list --state open --search "[PROPUESTA]" --json number --jq '.[].number')
             for num in $ISSUES; do
               triage_issue "$num" "all"
@@ -115,17 +122,12 @@ jobs:
           elif [[ "$EVENT_NAME" == "issue_comment" ]]; then
             CMD=$(echo "$COMMENT_BODY" | awk '{print $1}')
             ARGS=$(echo "$COMMENT_BODY" | cut -d' ' -f2-)
-            
-            if [[ "$CMD" == "/labels" ]]; then
-              triage_issue "$ISSUE_NUMBER" "labels"
-            elif [[ "$CMD" == "/milestones" ]]; then
-              triage_issue "$ISSUE_NUMBER" "milestones"
-            elif [[ "$CMD" == "/assign" ]]; then
-              triage_issue "$ISSUE_NUMBER" "assign" "$ARGS"
-            elif [[ "$CMD" == "/triage" ]]; then
-              triage_issue "$ISSUE_NUMBER" "all"
-            fi
+            case "$CMD" in
+              "/labels") triage_issue "$ISSUE_NUMBER" "labels" ;;
+              "/milestones") triage_issue "$ISSUE_NUMBER" "milestones" ;;
+              "/assign") triage_issue "$ISSUE_NUMBER" "assign" "$ARGS" ;;
+              "/triage") triage_issue "$ISSUE_NUMBER" "all" ;;
+            esac
           else
-            # Triggered by issue opened/edited or manual (non-bulk)
             triage_issue "$ISSUE_NUMBER" "all"
           fi
