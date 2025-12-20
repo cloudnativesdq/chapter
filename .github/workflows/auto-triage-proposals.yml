@@ -20,7 +20,9 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         issue_number: ${{ github.event.issue.number }}
-        assignees: TineoC
+        assignees: |
+          TineoC
+          maddigsys
     - name: Add welcome comment
       if: contains(github.event.issue.title, 'Propuesta de Charla') || contains(github.event.issue.body, '## Propuesta de Charla')
       uses: peter-evans/create-or-update-comment@v2
