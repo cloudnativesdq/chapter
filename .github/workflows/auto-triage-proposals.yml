@@ -41,7 +41,9 @@ jobs:
           # Function to triage a single issue
           triage_issue() {
             local issue_no=$1
-            local command_type=$2 # "all", "labels", "milestones"
+            local command_type=$2 # "all", "labels", "milestones", "assign"
+            local args=$3         # specific for assign
+            local summary=""
             
             echo "Processing Issue #$issue_no (Command: $command_type)..."
             
@@ -59,7 +61,7 @@ jobs:
               if echo "$issue_body" | grep -qi "Onsite"; then LABELS="${LABELS}${LABELS:+,}type/in-person"; fi
               
               if [ -n "$LABELS" ]; then
-                gh issue edit "$issue_no" --add-label "$LABELS" || echo "Warning: Failed labels on #$issue_no"
+                gh issue edit "$issue_no" --add-label "$LABELS" && summary="${summary}\n- ✅ Etiquetas actualizadas: $LABELS" || summary="${summary}\n- ❌ Error al actualizar etiquetas"
               fi
             fi
 
@@ -74,18 +76,31 @@ jobs:
                 *) MILESTONE_TITLE="2026 Q1" ;;
               esac
               
-              # Verify milestone
               MILESTONE_NUMBER=$(gh api repos/:owner/:repo/milestones --jq ".[] | select(.title == \"$MILESTONE_TITLE\") | .number")
               if [ -n "$MILESTONE_NUMBER" ]; then
-                gh issue edit "$issue_no" --milestone "$MILESTONE_TITLE" || echo "Warning: Failed milestone on #$issue_no"
+                gh issue edit "$issue_no" --milestone "$MILESTONE_TITLE" && summary="${summary}\n- ✅ Milestone asignado: $MILESTONE_TITLE" || summary="${summary}\n- ❌ Error al asignar milestone"
               else
-                echo "Warning: Milestone '$MILESTONE_TITLE' not found."
+                summary="${summary}\n- ⚠️ No se encontró el milestone '$MILESTONE_TITLE'"
               fi
             fi
 
-            # 3. Assignees (Always ensure TineoC is assigned for all/triage)
+            # 3. Assignees Logic
             if [[ "$command_type" == "all" ]]; then
-              gh issue edit "$issue_no" --add-assignee "TineoC" || echo "Warning: Failed assignment"
+              gh issue edit "$issue_no" --add-assignee "TineoC" && summary="${summary}\n- ✅ Responsable asignado: @TineoC"
+            elif [[ "$command_type" == "assign" ]]; then
+              if [ -n "$args" ]; then
+                # Remove extra spaces and @ if present
+                CLEAN_ARGS=$(echo "$args" | tr -d '@' | xargs)
+                gh issue edit "$issue_no" --add-assignee "$CLEAN_ARGS" && summary="${summary}\n- ✅ Nueva asignación: $args" || summary="${summary}\n- ❌ Error al asignar a: $args (Verifica que sea colaborador)"
+              else
+                summary="${summary}\n- ⚠️ Uso: /assign <username>"
+              fi
+            fi
+
+            # Post feedback if it's not a bulk run
+            if [ "$IS_BULK" != "true" ] && [ -n "$summary" ]; then
+              gh issue comment "$issue_no" --body "### 🤖 Actualización Automática
+              Hola @${{ github.actor }}, he procesado tu comando: $summary"
             fi
           }
 
@@ -98,11 +113,16 @@ jobs:
               triage_issue "$num" "all"
             done
           elif [[ "$EVENT_NAME" == "issue_comment" ]]; then
-            if [[ "$COMMENT_BODY" == "/labels" ]]; then
+            CMD=$(echo "$COMMENT_BODY" | awk '{print $1}')
+            ARGS=$(echo "$COMMENT_BODY" | cut -d' ' -f2-)
+            
+            if [[ "$CMD" == "/labels" ]]; then
               triage_issue "$ISSUE_NUMBER" "labels"
-            elif [[ "$COMMENT_BODY" == "/milestones" ]]; then
+            elif [[ "$CMD" == "/milestones" ]]; then
               triage_issue "$ISSUE_NUMBER" "milestones"
-            elif [[ "$COMMENT_BODY" == "/triage" ]]; then
+            elif [[ "$CMD" == "/assign" ]]; then
+              triage_issue "$ISSUE_NUMBER" "assign" "$ARGS"
+            elif [[ "$CMD" == "/triage" ]]; then
               triage_issue "$ISSUE_NUMBER" "all"
             fi
           else
