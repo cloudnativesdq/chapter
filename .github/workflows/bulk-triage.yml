@@ -55,14 +55,23 @@ jobs:
                     else Q="Q4"; fi
                     MILESTONE_TITLE="$YEAR $Q"
 
-                    # 3. Apply changes (separate calls for safety)
+                    # 3. Apply changes via GitHub CLI
+                    echo "Applying labels: $LABELS"
                     if [ -n "$LABELS" ]; then
                       gh issue edit "$ISSUE_URL" --add-label "$LABELS" || echo "Warning: Failed labels on $ISSUE_URL"
                     fi
                     
-                    gh issue edit "$ISSUE_URL" --milestone "$MILESTONE_TITLE" || echo "Warning: Failed milestone on $ISSUE_URL"
+                    echo "Assigning milestone: $MILESTONE_TITLE"
+                    # Get milestone number to verify existence
+                    MILESTONE_NUMBER=$(gh api repos/:owner/:repo/milestones --jq ".[] | select(.title == \"$MILESTONE_TITLE\") | .number")
+                    if [ -n "$MILESTONE_NUMBER" ]; then
+                      gh issue edit "$ISSUE_URL" --milestone "$MILESTONE_TITLE" || echo "Warning: Failed milestone on $ISSUE_URL"
+                    else
+                      echo "Warning: Milestone '$MILESTONE_TITLE' not found in repository."
+                    fi
                     
-                    gh issue edit "$ISSUE_URL" --add-assignee "TineoC,maddigsys" || \
+                    echo "Assigning organizers..."
+                    gh issue edit "$ISSUE_URL" --add-assignee "TineoC" || \
                     gh issue edit "$ISSUE_URL" --add-assignee "TineoC" || \
                     echo "Warning: Failed assignments on $ISSUE_URL"
                     
