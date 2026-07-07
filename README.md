@@ -9,7 +9,7 @@ Bienvenidos al repositorio oficial del **Chapter de Cloud Native Santo Domingo (
 Para facilitar la organización y el acceso a la información, contamos con los siguientes recursos oficiales:
 
 *   🌐 **Sitio Web Oficial:** mira nuestros últimos meetups y recursos en [cloudnativesdq.org](https://cloudnativesdq.org).
-*   💻 **Código Fuente del Sitio Web:** El sitio web oficial está desarrollado en código abierto. Puedes encontrar y colaborar con el código fuente en el repositorio del mismo nombre: **[cloudnativesdq/website](https://github.com/cloudnativesdq/website)**.
+*   💻 **Código Fuente del Sitio Web:** El sitio web oficial está desarrollado en código abierto. Puedes encontrar y colaborar con el código fuente en nuestro repositorio: **[cloudnativesdq/website](https://github.com/cloudnativesdq/website)**.
 *   📖 **Manual de Organización de Eventos:** Guía general para la logística de eventos locales. Consulta el documento principal en: **[manual_de_eventos.md](file:///Users/tineoc/Documents/Code/chapter/manual_de_eventos.md)**.
 
 ---
