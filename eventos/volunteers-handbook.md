@@ -1,6 +1,6 @@
 # Manual del Voluntario (Volunteers Handbook)
 
-¡Gracias por ofrecer tu tiempo para ayudar a nuestra comunidad! Este manual contiene la información práctica que necesitas para desempeñar tus funciones de voluntariado en el evento de forma fluida y satisfactoria. Si deseas consultar las políticas logísticas generales de la sede y el flujo global, revisa el **[Manual de Organización de Eventos General](file:///Users/tineoc/Documents/Code/chapter/manual_de_eventos.md)**.
+¡Gracias por ofrecer tu tiempo para ayudar a nuestra comunidad! Este manual contiene la información práctica que necesitas para desempeñar tus funciones de voluntariado en el evento de forma fluida y satisfactoria. Si deseas consultar las políticas logísticas generales de la sede y el flujo global, revisa el **[Manual de Organización de Eventos General](README.md)**.
 
 > [!IMPORTANT]
 > Todos los voluntarios deben conocer, cumplir y hacer cumplir el **[Código de Conducta de la CNCF](https://github.com/cncf/foundation/blob/main/code-of-conduct-languages/es/code-of-conduct-es.md)**. Al ser la cara visible del evento, nuestro trato debe ser siempre inclusivo, respetuoso y empático.
@@ -67,7 +67,7 @@ Como voluntario en el sitio, eres la cara visible del evento para los asistentes
     *   [ ] Posiciónate en los cruces de pasillos principales. Saluda a las personas extraviadas y dirígelas (guiar a los attendees) hacia las salas correspondientes, los sanitarios o el comedor.
     *   [ ] Durante las transiciones de charlas, asiste al Ops Lead en agilizar el flujo de salida y entrada en las aulas.
     *   [ ] Como *Runner*, mantente en comunicación en Slack para responder solicitudes urgentes de material (ej: *"Llevar un adaptador USB-C a HDMI de repuesto a la Sala B"*, *"Llevar agua para ponente a la Sala C"*).
-    *   [ ] **Nota de Transporte de Alimentos (Si aplica):** Si te has ofrecido a transportar o recoger comida el día del evento, recuerda que por seguridad logística tu única función para ese día será esa labor debido al tránsito impredecible de Rep Dom *(ver detalles y restricciones en la [Guía de Coordinación de Alimentos y Proveedores](file:///Users/tineoc/Documents/Code/chapter/eventos/proveedores-comida.md))*.
+    *   [ ] **Nota de Transporte de Alimentos (Si aplica):** Si te has ofrecido a transportar o recoger comida el día del evento, recuerda que por seguridad logística tu única función para ese día será esa labor debido al tránsito impredecible de Rep Dom *(ver detalles y restricciones en la [Guía de Coordinación de Alimentos y Proveedores](proveedores-comida.md))*.
 
 ---
 

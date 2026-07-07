@@ -1,6 +1,6 @@
 # Guía de Coordinación de Alimentos y Proveedores (Catering Guide)
 
-Este documento establece las directrices logísticas para la selección, contratación y gestión del servicio de comida y catering durante los eventos de la comunidad. Para más información sobre el flujo logístico general, consulta el **[Manual de Organización de Eventos General](file:///Users/tineoc/Documents/Code/chapter/manual_de_eventos.md)**.
+Este documento establece las directrices logísticas para la selección, contratación y gestión del servicio de comida y catering durante los eventos de la comunidad. Para más información sobre el flujo logístico general, consulta el **[Manual de Organización de Eventos General](README.md)**.
 
 ---
 

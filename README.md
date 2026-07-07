@@ -10,7 +10,7 @@ Para facilitar la organización y el acceso a la información, contamos con los 
 
 *   🌐 **Sitio Web Oficial:** Descubre nuestras últimas noticias, registro a meetups y recursos en [cloudnativesdq.org](https://cloudnativesdq.org).
 *   💻 **Código Fuente del Sitio Web:** El sitio web oficial está desarrollado en código abierto. Puedes encontrar y colaborar con el código fuente en el repositorio del mismo nombre: **[cloudnativesdq.org](https://github.com/cloudnativesdq/cloudnativesdq.org)**.
-*   📖 **Manual de Organización de Eventos:** Guía general para la logística de eventos locales. Consulta el documento principal en: **[manual_de_eventos.md](file:///Users/tineoc/Documents/Code/chapter/manual_de_eventos.md)**.
+*   📖 **Manual de Organización de Eventos:** Guía general para la logística de eventos locales. Consulta el documento principal en: **[eventos/README.md](eventos/README.md)**.
 
 ---
 
@@ -18,10 +18,10 @@ Para facilitar la organización y el acceso a la información, contamos con los 
 
 Hemos estructurado guías específicas para cada uno de los roles clave que hacen posibles nuestros eventos:
 
-*   🏢 **[Manual del Personal Organizador (Staff)](file:///Users/tineoc/Documents/Code/chapter/eventos/staff-handbook.md)**: Roles del Event Lead, Ops Lead, Content Lead, Comms Lead, junto con cronogramas de hitos previos y posteriores al evento y detalles del programa de sombras (shadowing).
-*   🎫 **[Manual del Voluntario (Volunteers)](file:///Users/tineoc/Documents/Code/chapter/eventos/volunteers-handbook.md)**: Instrucciones paso a paso para el registro/check-in de asistentes, control de acceso, paso de micrófonos de sala, guías de pasillo y cobertura digital del evento.
-*   🎤 **[Manual del Ponente (Speakers)](file:///Users/tineoc/Documents/Code/chapter/eventos/speakers-handbook.md)**: Directrices para los expositores sobre accesibilidad visual de diapositivas, inclusividad lingüística, plazos de entrega y logística en sitio.
-*   🍎 **[Guía de Coordinación de Alimentos y Proveedores (Catering Guide)](file:///Users/tineoc/Documents/Code/chapter/eventos/proveedores-comida.md)**: Criterios para la reserva y entrega de alimentos con al menos una semana de antelación y protocolo especial de transporte para el tránsito complejo de Santo Domingo.
+*   🏢 **[Manual del Personal Organizador (Staff)](eventos/staff-handbook.md)**: Roles del Event Lead, Ops Lead, Content Lead, Comms Lead, junto con cronogramas de hitos previos y posteriores al evento y detalles del programa de sombras (shadowing).
+*   🎫 **[Manual del Voluntario (Volunteers)](eventos/volunteers-handbook.md)**: Instrucciones paso a paso para el registro/check-in de asistentes, control de acceso, paso de micrófonos de sala, guías de pasillo y cobertura digital del evento.
+*   🎤 **[Manual del Ponente (Speakers)](eventos/speakers-handbook.md)**: Directrices para los expositores sobre accesibilidad visual de diapositivas, inclusividad lingüística, plazos de entrega y logística en sitio.
+*   🍎 **[Guía de Coordinación de Alimentos y Proveedores (Catering Guide)](eventos/proveedores-comida.md)**: Criterios para la reserva y entrega de alimentos con al menos una semana de antelación y protocolo especial de transporte para el tránsito complejo de Santo Domingo.
 
 *Todos los manuales y guías están interconectados con enlaces Markdown para facilitar una navegación rápida.*
 

@@ -1,6 +1,6 @@
 # Manual del Ponente (Speakers Handbook)
 
-¡Felicitaciones por haber sido seleccionado como ponente en nuestro evento! Tu participación es fundamental para enriquecer el conocimiento técnico y el crecimiento profesional de nuestra comunidad. Este manual te proporciona las pautas necesarias para preparar y realizar tu presentación con éxito. Si deseas conocer la logística general de la sede o el Código de Conducta completo, revisa el **[Manual de Organización de Eventos General](file:///Users/tineoc/Documents/Code/chapter/manual_de_eventos.md)**.
+¡Felicitaciones por haber sido seleccionado como ponente en nuestro evento! Tu participación es fundamental para enriquecer el conocimiento técnico y el crecimiento profesional de nuestra comunidad. Este manual te proporciona las pautas necesarias para preparar y realizar tu presentación con éxito. Si deseas conocer la logística general de la sede o el Código de Conducta completo, revisa el **[Manual de Organización de Eventos General](README.md)**.
 
 > [!IMPORTANT]
 > Todos los ponentes deben cumplir de manera obligatoria y rigurosa con el **[Código de Conducta de la CNCF](https://github.com/cncf/foundation/blob/main/code-of-conduct-languages/es/code-of-conduct-es.md)** en su comportamiento, lenguaje y el contenido visual expuesto en sus diapositivas y demostraciones.
