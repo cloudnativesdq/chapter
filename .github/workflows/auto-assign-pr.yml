@@ -1,0 +1,50 @@
+name: Cloud Native SDQ - Auto Assign PR
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+
+permissions:
+  pull-requests: write
+  contents: read
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Assign Reviewers and Assignees
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Processing PR #$PR_NUMBER..."
+
+          # Parse OWNERS_ALIASES using yq (pre-installed on ubuntu-latest)
+          if [ -f OWNERS_ALIASES ]; then
+            ORGANIZERS=$(yq '.aliases.organizers[]' OWNERS_ALIASES 2>/dev/null | tr '\n' ',' | sed 's/,$//')
+            WOMEN_IN_CLOUD=$(yq '.aliases.women-in-cloud-native-organizers[]' OWNERS_ALIASES 2>/dev/null | tr '\n' ',' | sed 's/,$//')
+          fi
+
+          # Assign PR to organizers (individuals)
+          if [ -n "$ORGANIZERS" ]; then
+            echo "Assigning PR to organizers: $ORGANIZERS"
+            gh pr edit "$PR_NUMBER" --add-assignee "$ORGANIZERS" --repo "$REPO"
+          else
+            echo "No individual organizers found in OWNERS_ALIASES."
+          fi
+
+          # Request review from individual women-in-cloud-native-organizers
+          if [ -n "$WOMEN_IN_CLOUD" ]; then
+            echo "Requesting review from: $WOMEN_IN_CLOUD"
+            gh pr edit "$PR_NUMBER" --add-reviewer "$WOMEN_IN_CLOUD" --repo "$REPO"
+          fi
+
+          # Request review from teams on GitHub (as teams)
+          echo "Requesting review from teams..."
+          gh pr edit "$PR_NUMBER" --add-reviewer "cloudnativesdq/women-in-cloud-native-organizers" --repo "$REPO" || true
+          gh pr edit "$PR_NUMBER" --add-reviewer "cloudnativesdq/women-in-cloud-native" --repo "$REPO" || true
