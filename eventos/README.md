@@ -61,9 +61,22 @@ Es un requisito mandatorio para todos los asistentes, ponentes, voluntarios y mi
 
 Para que el evento funcione con la precisión de un reloj, es fundamental delimitar los roles. A continuación se presentan las responsabilidades clave inspiradas en el modelo del Kubernetes Contributor Summit:
 
+### Tabla de Roles, Descripción y Requerimientos
+
+Un evento requiere al menos **1 Staff** y por lo menos **2 Voluntarios**. Sin embargo, ante la falta o ausencia de voluntarios, el Staff deberá asumir y repartirse las funciones operativas de estos para garantizar la viabilidad del evento.
+
+| Rol | Manual / Recurso | Descripción | Cantidad Mínima / Estimada |
+| :--- | :--- | :--- | :--- |
+| **Staff (Organizador)** | [Manual de Staff](staff-handbook.md) | Dirección estratégica del evento, administración del presupuesto, coordinación de proveedores, atención al Código de Conducta y gestión del programa de Shadows. | **Mínimo 1** |
+| **Voluntario (Volunteer)** | [Manual de Voluntarios](volunteers-handbook.md) | Soporte operativo en el sitio: check-in, paso de micrófonos en Q&A, guiar a los asistentes (attendees), tirar fotos y subir guías de navegación/ubicación. | **Mínimo 2** (el Staff asume sus roles si no hay voluntarios) |
+| **Ponente (Speaker)** | [Manual de Ponente](speakers-handbook.md) | Compartir conocimiento técnico, preparar presentaciones accesibles/inclusivas y cumplir el Código de Conducta. | Variable (según agenda) |
+| **Proveedor de Comida** | [Guía de Alimentos](proveedores-comida.md) | Preparar, etiquetar (alérgenos) y transportar catering o refrigerios. | Opcional (1 proveedor) |
+
+---
+
 ### A. Staff (Personal Organizador y Líderes)
 
-El Staff está compuesto por los directores y líderes de área que planifican el evento meses antes del gran día. Para una guía operativa completa orientada a organizadores y el cronograma de hitos, consulta el **[Manual del Personal Organizador (Staff)](file:///Users/tineoc/Documents/Code/chapter/eventos/staff-handbook.md)**.
+El Staff está compuesto por los directores y líderes de área que planifican el evento meses antes del gran día. Para una guía operativa completa orientada a organizadores y el cronograma de hitos, consulta el **[Manual del Personal Organizador (Staff)](staff-handbook.md)**.
 
 > [!TIP]
 > **Separación de Roles Recomendada:** Se recomienda encarecidamente que los miembros del Staff y los Ponentes (*Speakers*) sean personas separadas. Esto previene la sobrecarga de trabajo de los organizadores y asegura que los ponentes puedan enfocarse en el contenido de su charla sin la distracción de resolver problemas logísticos del evento en tiempo real.
@@ -102,7 +115,7 @@ El Staff está compuesto por los directores y líderes de área que planifican e
 
 ### B. Voluntarios (Volunteers)
 
-Los voluntarios son el motor del evento el día de su ejecución. Sus turnos suelen ser de 1 o 2 horas para permitirles disfrutar también de las conferencias. Para ver instrucciones detalladas de los roles, listas de verificación y protocolos de emergencia, consulta el **[Manual del Voluntario (Volunteers)](file:///Users/tineoc/Documents/Code/chapter/eventos/volunteers-handbook.md)**.
+Los voluntarios son el motor del evento el día de su ejecución. Sus turnos suelen ser de 1 o 2 horas para permitirles disfrutar también de las conferencias. Para ver instrucciones detalladas de los roles, listas de verificación y protocolos de emergencia, consulta el **[Manual del Voluntario (Volunteers)](volunteers-handbook.md)**.
 
 > [!IMPORTANT]
 > **Delegación de Funciones a Voluntarios:** El Líder de Operaciones debe contactar y convocar a los voluntarios seleccionados antes del evento para delegar de forma estructurada las siguientes tareas:
@@ -140,7 +153,7 @@ Los voluntarios son el motor del evento el día de su ejecución. Sus turnos sue
 
 ### C. Ponentes (Speakers)
 
-Los ponentes son responsables de la transferencia de conocimiento técnico y cultural en el evento. Para pautas completas de inclusividad, diseño de diapositivas accesibles y logística en sitio, consulta el **[Manual del Ponente (Speakers)](file:///Users/tineoc/Documents/Code/chapter/eventos/speakers-handbook.md)**.
+Los ponentes son responsables de la transferencia de conocimiento técnico y cultural en el evento. Para pautas completas de inclusividad, diseño de diapositivas accesibles y logística en sitio, consulta el **[Manual del Ponente (Speakers)](speakers-handbook.md)**.
 
 #### Responsabilidades
 *   **Antes del Evento:**
@@ -184,7 +197,7 @@ El espacio físico define la accesibilidad, comodidad y profesionalismo del even
 
 ### B. Comida y Catering (Food)
 
-Ofrecer comida y bebida inclusivas es vital para garantizar la salud y comodidad de todos los participantes. Para una guía operativa completa sobre compras, plazos y transporte de comida en entornos de tránsito complejo, consulta la **[Guía de Coordinación de Alimentos y Proveedores](file:///Users/tineoc/Documents/Code/chapter/eventos/proveedores-comida.md)**.
+Ofrecer comida y bebida inclusivas es vital para garantizar la salud y comodidad de todos los participantes. Para una guía operativa completa sobre compras, plazos y transporte de comida en entornos de tránsito complejo, consulta la **[Guía de Coordinación de Alimentos y Proveedores](proveedores-comida.md)**.
 
 *   **Decisión y Presupuesto:** Los eventos no necesitan obligatoriamente dar refrigerio o almuerzo, pero en caso de decidir hacerlo, el servicio de comida debe reservarse y pagarse con al menos una semana de antelación.
 *   **Logística de Entrega (Delivery):** Se recomienda muy especialmente coordinar el envío directo con el proveedor a la sede (*venue*). Nunca se debe coordinar el delivery a último momento.

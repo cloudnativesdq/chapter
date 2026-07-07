@@ -25,18 +25,18 @@ El equipo organizador principal está compuesto por las siguientes figuras, cada
 ### 2. Líder de Operaciones (Ops Lead)
 *   **Enfoque:** Logística en sitio, infraestructura física y coordinación de voluntarios.
 *   **Responsabilidades:**
-    *   Diseñar y supervisar el flujo de registro, catering y distribución de las salas *(para detalles de catering, ver [Guía de Alimentos y Proveedores](file:///Users/tineoc/Documents/Code/chapter/eventos/proveedores-comida.md))*.
+    *   Diseñar y supervisar el flujo de registro, catering y distribución de las salas *(para detalles de catering, ver [Guía de Alimentos y Proveedores](proveedores-comida.md))*.
     *   Elaborar la matriz de turnos para los voluntarios y liderar la sesión de orientación el día del evento.
     *   Coordinar con los proveedores de servicios del lugar (personal técnico, limpieza, seguridad y catering).
     *   Establecer y vigilar la Sala de Staff (Staff Room).
-    *   Contactar y convocar a los voluntarios previamente para delegarles funciones específicas (check-in, guiar a asistentes, pasar micrófonos, tirar fotos y publicar contenido digital de cómo llegar al salón o sede) *(para pautas de asignación y checklists de voluntarios, ver [Manual del Voluntario](file:///Users/tineoc/Documents/Code/chapter/eventos/volunteers-handbook.md))*.
+    *   Contactar y convocar a los voluntarios previamente para delegarles funciones específicas (check-in, guiar a asistentes, pasar micrófonos, tirar fotos y publicar contenido digital de cómo llegar al salón o sede) *(para pautas de asignación y checklists de voluntarios, ver [Manual del Voluntario](volunteers-handbook.md))*.
 
 ### 3. Líder de Contenido (Content Lead)
 *   **Enfoque:** Agenda académica, ponentes y material de presentación.
 *   **Responsabilidades:**
     *   Organizar el comité de revisión para la Convocatoria de Ponencias (CFP).
     *   Estructurar la agenda horaria del evento evitando solapamientos críticos de temáticas.
-    *   Mantener comunicación directa con los ponentes seleccionados para guiarles en los plazos de entrega *(para las directrices que deben seguir los expositores, ver [Manual del Ponente](file:///Users/tineoc/Documents/Code/chapter/eventos/speakers-handbook.md))*.
+    *   Mantener comunicación directa con los ponentes seleccionados para guiarles en los plazos de entrega *(para las directrices que deben seguir los expositores, ver [Manual del Ponente](speakers-handbook.md))*.
     *   Verificar que las salas cuenten con los recursos específicos solicitados por los ponentes (ej. pizarras, conexiones HDMI/USB-C especiales).
 
 ### 4. Líder de Comunicación (Comms Lead)
